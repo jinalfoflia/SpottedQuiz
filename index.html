@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>Geography Game</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.17.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.17.0/mapbox-gl.css' rel='stylesheet' />
+    <link href='https://www.mapbox.com/base/latest/base.css' rel='stylesheet' />
+    <script src="sweetalert-master/dist/sweetalert.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="sweetalert-master/dist/sweetalert.css">
+
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font: 15px/20px sans-serif;
+        }
+        
+        .overlay {
+            padding: 10px;
+            position: absolute;
+            height: 100px;
+            bottom: 0px;
+            left: 0px;
+            right: 0px;
+            background-color: rgba(255,255,255,0);
+            
+        }
+        
+        #buttons {
+            display: inline;
+        }
+       
+        .button {
+            margin-right: 5px;
+            height: 50px;
+            font-size: 120%;
+          }
+        
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='map'></div>
+    <div class='overlay'>
+        <div style='display:inline-block;padding:5px 20px;color: white'>
+            <h1>Spot the Place in the Imagery</h1>
+        </div>
+        <div id='buttons'>
+        </div>
+    </div>
+    <script src='sites.js'></script>
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoiamluYWxmb2ZsaWEiLCJhIjoiOE53X2toRSJ9.2aMeuYERrEvKHul16lAJjA';
+
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/satellite-v8',
+            center: [0, 0],
+            zoom: 3
+        });
+        var names = Object.keys(boundsByName);
+        // console.log(names);
+        var score = 0;
+        var currentIndex = 0;
+        buttons.innerHTML = '';
+
+        var startPlace = getRandomName();
+        // console.log(startPlace);
+        var placesVisited = [];
+        showPlace(getRandomName());
+
+        function getRandomName() {
+          var randomIndex = Math.floor(Math.random() * names.length);
+          return names[randomIndex];
+        }
+
+        function randomPlace(names) {
+          var randomName = getRandomName();
+          if (names.indexOf(randomName) === -1) {
+            return randomName;
+          } else {
+            return randomPlace(names);
+          }
+        }
+
+        function getOptions(name) {
+          var nameIndex = names.indexOf(name);
+          var option1 = randomPlace([name]);
+          var option2 = randomPlace([name, option1]);
+          var options = [
+            option1,
+            option2,
+            name
+          ];
+          return options.sort(function() {
+            return Math.random() - 0.5;
+          });
+        }
+
+        // function rank(score) {
+
+
+        //   if (score === 0) {
+        //     swal(' Game over! You didn\'t score a duck, you just didn\'t answer the questions right','','');
+        //   }
+        //   if (score >= 1 || score <= 4){
+        //     swal('Game over! You are smart, but you just didn\'t answer few questions right','','');
+        //   }
+        //   if (score >= 5 || score <= 8) {
+        //     swal('Game over! Woah! I’m sure your mouse clicked the wrong answers ','','');
+        //   }
+        //   if (score === 9 || score === 10) {
+        //     swal('Game over! Hurray!  You must have been really good in Geography ‍','','');
+        //   }
+        // }
+
+
+        function showPlace(name) {
+          // 
+          map.fitBounds(boundsByName[name]);
+          placesVisited.push(name);
+          var options = getOptions(name);
+          buttons.innerHTML = '';
+          options.forEach(function(choice, i) {
+            var button = document.createElement('button');
+            button.setAttribute('class', 'button fill-teal');
+            var optionButton = buttons.appendChild(button);
+            optionButton.innerHTML = options[i];
+            optionButton.onclick = function() {
+                var selectedText = this.innerText;
+                var correctAnswer = name;
+                if (selectedText === correctAnswer) {
+                    swal("Correct Answer", "You're right", "success");
+                    score = score + 1;
+                    // console.log(score);
+                    if (placesVisited.length < 2) {
+                      showPlace(randomPlace(placesVisited));
+                    } else {
+                      swal("Game Over", "Refresh the Page. Your Scored "+score, "success");
+                      score = 0;
+                      while (score = 0) { break;}
+                      // if (score === 0){} else{break;}
+                      // rank(score);
+                      // score = 0;
+                      // if (confirm('Game Over!', "Refresh the Page. You Scored "+score, "success")){
+                      //   window.location.reload();
+                      // }
+                      // swal("refresh the page");
+                      // function confirm_Refresh() 
+                      // {
+                      //   var Refresh = confirm("Do you want to refresh the page?");
+                      //   if (Refresh)
+                      //   {
+                      //     setTimeout("location.reload(true);",5000);
+                      //   }
+                      // }
+                    }
+                } else {
+                    swal("Wrong Answer","Try next","error");
+                    if (placesVisited.length < 2) {
+                      showPlace(randomPlace(placesVisited));
+                    } else {
+                      swal('Game Over!', "Refresh the Page. You Scored "+score, "success");
+                      score = 0;
+                      while (score = 0) { break;}
+                      // if (score === 0){} else {break;} 
+                      // if (confirm('Game Over!', "Refresh the Page. You Scored "+score, "success")){
+                      //   window.location.reload();
+                      // }
+                      // swal("refresh the page");
+                      // function confirm_Refresh() 
+                      // {
+                      //   var Refresh = confirm("Do you want to refresh the page?");
+                      //   if (Refresh)
+                      //   {
+                      //     setTimeout("location.reload(true);",5000);
+                      //   }
+                      // }
+                      
+                      // rank(score);
+                    }
+                    // console.log(selectedText);
+                }
+            };
+          });         
+        }
+
+
+
+    </script>
+</body>
+
+</html>
