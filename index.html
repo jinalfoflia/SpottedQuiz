@@ -79,6 +79,9 @@
         var placesVisited = [];
         showPlace(getRandomName());
 
+        // function refresh() {
+        //   setTimeout(function () {location.reload()}, 5000);}
+
         function getRandomName() {
           var randomIndex = Math.floor(Math.random() * names.length);
           return names[randomIndex];
@@ -107,24 +110,6 @@
           });
         }
 
-        // function rank(score) {
-
-
-        //   if (score === 0) {
-        //     swal(' Game over! You didn\'t score a duck, you just didn\'t answer the questions right','','');
-        //   }
-        //   if (score >= 1 || score <= 4){
-        //     swal('Game over! You are smart, but you just didn\'t answer few questions right','','');
-        //   }
-        //   if (score >= 5 || score <= 8) {
-        //     swal('Game over! Woah! I’m sure your mouse clicked the wrong answers ','','');
-        //   }
-        //   if (score === 9 || score === 10) {
-        //     swal('Game over! Hurray!  You must have been really good in Geography ‍','','');
-        //   }
-        // }
-
-
         function showPlace(name) {
           // 
           map.fitBounds(boundsByName[name]);
@@ -142,60 +127,27 @@
                 if (selectedText === correctAnswer) {
                     swal("Correct Answer", "You're right", "success");
                     score = score + 1;
-                    // console.log(score);
                     if (placesVisited.length < 10) {
                       showPlace(randomPlace(placesVisited));
                     } else {
-                      swal("Game Over", "Refresh the Page. Hurray!🎉 Your Scored "+score, "success");
-                      score = 0;
-                      while (score = 0) { break;}
-                      // if (score === 0){} else{break;}
-                      // rank(score);
-                      // score = 0;
-                      // if (confirm('Game Over!', "Refresh the Page. You Scored "+score, "success")){
-                      //   window.location.reload();
-                      // }
-                      // swal("refresh the page");
-                      // function confirm_Refresh() 
-                      // {
-                      //   var Refresh = confirm("Do you want to refresh the page?");
-                      //   if (Refresh)
-                      //   {
-                      //     setTimeout("location.reload(true);",5000);
-                      //   }
-                      // }
+                      swal("Game Over", "Refresh the Page. Your Scored "+score+"/10", "success");
+                      // score != score+1;
                     }
                 } else {
                     swal("Wrong Answer","Try next","error");
                     if (placesVisited.length < 10) {
                       showPlace(randomPlace(placesVisited));
                     } else {
-                      swal('Game Over!', "Refresh the Page. Hurray!🎉 You Scored "+score, "success");
-                      score = 0;
-                      while (score = 0) { break;}
-                      // if (score === 0){} else {break;} 
-                      // if (confirm('Game Over!', "Refresh the Page. You Scored "+score, "success")){
-                      //   window.location.reload();
-                      // }
-                      // swal("refresh the page");
-                      // function confirm_Refresh() 
-                      // {
-                      //   var Refresh = confirm("Do you want to refresh the page?");
-                      //   if (Refresh)
-                      //   {
-                      //     setTimeout("location.reload(true);",5000);
-                      //   }
-                      // }
-                      
-                      // rank(score);
+                      swal('Game Over!', "Refresh the Page. You Scored "+score+"/10", "success");
+                      // score != score+1;
                     }
-                    // console.log(selectedText);
                 }
             };
           });         
         }
 
 
+    // setTimeout(function() {window.location.reload();}, 5000);
 
     </script>
 </body>
